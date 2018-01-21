@@ -121,4 +121,12 @@ open class KolodaViewAnimator {
         })
     }
     
+    open func applyLoadNextCardAnimation(_ card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
+        UIView.animate(withDuration: 0.2, animations: {
+            card.alpha = 1.0
+        }, completion: { finished in
+            completion?(finished)
+        })
+    }
+    
 }

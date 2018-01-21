@@ -360,8 +360,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         currentCardIndex += 1
         let shownCardsCount = currentCardIndex + countOfVisibleCards
+        var cardAdded = false
         if shownCardsCount - 1 < countOfCards {
             loadNextCard()
+            cardAdded = true
         }
         
         if !visibleCards.isEmpty {
@@ -370,7 +372,13 @@ open class KolodaView: UIView, DraggableCardDelegate {
                     return
                 }
                 
-                _self.visibleCards.last?.isHidden = false
+                if cardAdded, let lastCard = _self.visibleCards.last {
+                    _self.animator.applyLoadNextCardAnimation(lastCard, completion: { _ in
+                        
+                    })
+                }
+                
+//                _self.visibleCards.last?.isHidden = false
                 _self.animating = false
                 _self.delegate?.koloda(_self, didSwipeCardAt: _self.currentCardIndex - 1, in: direction)
                 _self.delegate?.koloda(_self, didShowCardAt: _self.currentCardIndex)
@@ -392,7 +400,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         let scale = cardParameters.scale
         lastCard.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1)
-        lastCard.isHidden = true
+//        lastCard.isHidden = true
+        lastCard.alpha = 0.0
         lastCard.isUserInteractionEnabled = true
         
         if let card = visibleCards.last {
